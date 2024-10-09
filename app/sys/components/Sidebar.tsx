@@ -19,7 +19,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { href: '/sys/add', icon: Plus, label: '添加', className: 'border border-gray-300 rounded-full p-1', labelClassName: 'font-semibold' },
-    { href: '/sys/categories', icon: LayoutDashboard, label: 'Categories' },
+    { href: '/sys/categories', icon: FileText, label: '分类' },
     { href: '/sys/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/sys/resource', icon: FileText, label: 'Resource' },
     {

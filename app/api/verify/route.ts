@@ -41,10 +41,10 @@ export async function POST(request: Request) {
   if (password !== process.env.VERIFY_PASSWORD) {
     return NextResponse.json({ error: '密码错误' }, { status: 400 });
   }
-
-  const githubApi = process.env.GITHUB_API_TOKEN;
-  const owner = process.env.OWNER;
-  const repo = process.env.REPO;
+  
+  const githubApi = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+  const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
+  const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
   if (!githubApi || !owner || !repo) {
     return NextResponse.json({ error: '缺少必要的环境变量' }, { status: 400 });
   }

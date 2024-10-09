@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
+import { fetchCategories } from '@/lib/fetchCategories';
 
 interface CategoryData {
   icon?: string
@@ -191,7 +192,9 @@ const CRUDTable: React.FC = () => {
   const [data, setData] = useState<Record<string, CategoryData>>({})
   const [showAddForm, setShowAddForm] = useState(false)
   const [currentPath, setCurrentPath] = useState<string[]>([])
-  const { githubApi, owner, repo } = useSelector((state: any) => state.auth)
+  const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
+  const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
+  const githubApiToken = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
   const { toast } = useToast()
 
   useEffect(() => {
@@ -200,15 +203,16 @@ const CRUDTable: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`https://raw.gitmirror.com/${owner}/${repo}/master/src/db/db.json`)
-      setData(response.data)
+      const categoriesData = await fetchCategories();
+      setData(categoriesData);
+      console.log(categoriesData);
     } catch (error) {
-      console.error('Error fetching data:', error)
+      console.error('获取数据失败:', error);
       toast({
         title: "错误",
         description: "获取数据失败",
         variant: "destructive",
-      })
+      });
     }
   }
 
@@ -311,7 +315,7 @@ const CRUDTable: React.FC = () => {
         },
         {
           headers: {
-            Authorization: `token ${githubApi}`,
+            Authorization: `token ${githubApiToken}`,
             'Content-Type': 'application/json'
           }
         }
@@ -346,7 +350,7 @@ const CRUDTable: React.FC = () => {
         `https://api.github.com/repos/${owner}/${repo}/contents/src/db/db.json?ref=master`,
         {
           headers: {
-            Authorization: `token ${githubApi}`
+            Authorization: `token ${githubApiToken}`
           }
         }
       )

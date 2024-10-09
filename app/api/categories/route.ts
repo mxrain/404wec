@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-
-const DATA_URL = 'https://raw.gitmirror.com/mxrain/404zyt/master/src/db/db.json';
+  
+const DATA_URL = `https://raw.gitmirror.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${process.env.NEXT_PUBLIC_GITHUB_REPO}/master/src/db/db.json`;
 
 export async function GET() {
   try {

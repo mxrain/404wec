@@ -7,6 +7,7 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
 const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
+console.log(baseUrl);
 
 export const fetchData = async () => {
   try {
