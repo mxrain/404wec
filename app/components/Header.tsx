@@ -10,7 +10,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Loader2, ChevronDown } from "lucide-react";
+import { Loader2, ChevronRight } from "lucide-react";
 
 interface CategoryData {
   [key: string]: {
@@ -20,27 +20,22 @@ interface CategoryData {
   };
 }
 
-const CategoryMenu = ({ categories, depth = 0 }: { categories: CategoryData, depth?: number }) => {
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-
+const CategoryMenu = ({ categories }: { categories: CategoryData }) => {
   return (
-    <ul className={`p-2 ${depth === 0 ? 'w-56' : 'absolute left-full top-0 bg-white shadow-lg rounded-md min-w-[200px]'}`}>
+    <ul className="p-2 w-56">
       {Object.entries(categories).map(([key, value]) => (
-        <li
-          key={key}
-          className="relative"
-          onMouseEnter={() => setHoveredCategory(key)}
-          onMouseLeave={() => setHoveredCategory(null)}
-        >
+        <li key={key} className="relative group">
           <Link
             href={`/category${value.link}`}
             className="flex items-center justify-between py-2 px-4 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
           >
-            <span style={{ fontWeight: value.items ? 'bold' : 'normal' }}>{key}</span>
-            {value.items && <ChevronDown className="h-4 w-4 transform -rotate-90" />}
+            <span>{key}</span>
+            {value.items && <ChevronRight className="h-4 w-4" />}
           </Link>
-          {value.items && hoveredCategory === key && (
-            <CategoryMenu categories={value.items} depth={depth + 1} />
+          {value.items && (
+            <div className="absolute left-full top-0 hidden group-hover:block">
+              <CategoryMenu categories={value.items} />
+            </div>
           )}
         </li>
       ))}
@@ -50,7 +45,6 @@ const CategoryMenu = ({ categories, depth = 0 }: { categories: CategoryData, dep
 
 export default function Header() {
   const { categories, status, error } = useData();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (status === 'loading') {
     return <div className="flex justify-center items-center h-16"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 加载中...</div>;
@@ -69,20 +63,10 @@ export default function Header() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger
-                onMouseEnter={() => setIsMenuOpen(true)}
-                onMouseLeave={() => setIsMenuOpen(false)}
-              >
-                分类
-              </NavigationMenuTrigger>
-              {isMenuOpen && (
-                <NavigationMenuContent
-                  onMouseEnter={() => setIsMenuOpen(true)}
-                  onMouseLeave={() => setIsMenuOpen(false)}
-                >
-                  <CategoryMenu categories={categories} />
-                </NavigationMenuContent>
-              )}
+              <NavigationMenuTrigger>分类</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <CategoryMenu categories={categories} />
+              </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="https://chatbot.weixin.qq.com/webapp/zR6XpGC9NjMrGjpuuboUQACIxqCwLZ?robotName=%E8%B5%84%E6%BA%90%E6%90%9C%E7%B4%A2%E6%9C%BA%E5%99%A8%E4%BA%BA" legacyBehavior passHref>
