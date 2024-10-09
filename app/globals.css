@@ -76,3 +76,28 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.main-layout {
+  @apply flex flex-col min-h-screen;
+}
+
+header {
+  @apply bg-white shadow-sm fixed top-0 left-0 right-0 z-50;
+  height: var(--header-height);
+}
+
+main {
+  @apply flex-1 pt-[var(--header-height)];
+}
+
+footer {
+  @apply bg-gray-800 text-white py-4;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4;
+}
