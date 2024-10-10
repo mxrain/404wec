@@ -12,11 +12,12 @@ export async function fetchCategories() {
   }
 
   const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
+  const rawUrl = `https://raw.gitmirror.com/${owner}/${repo}/master`;
 
   console.log('Base URL:', baseUrl);
   
   try {
-    const response = await axios.get(`${baseUrl}/src/db/db.json`);
+    const response = await axios.get(`${rawUrl}/src/db/db.json`);
     return response.data;
   } catch (error) {
     console.error('获取数据时出错:', error);

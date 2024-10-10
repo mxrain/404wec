@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React from 'react';
 import { DataProvider } from '../context/DataContext';
@@ -8,7 +8,7 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <DataProvider>
       <Header />
-      {children}
+      <main>{children}</main>
     </DataProvider>
   );
 };

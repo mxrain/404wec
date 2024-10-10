@@ -12,6 +12,7 @@ function verifyToken(token: string) {
     jwt.verify(token, process.env.JWT_SECRET as string);
     return true;
   } catch (error) {
+    console.log(error);
     return false;
   }
 }
@@ -20,7 +21,7 @@ export async function GET(request: Request) {
   const token = cookies().get('token')?.value;
   if (!token) {
     return NextResponse.json({ error: 'Token不存在' }, { status: 401 });
-  }
+  } 
   return verifyToken(token)
     ? NextResponse.json({ valid: true }, { status: 200 })
     : NextResponse.json({ error: 'Token无效' }, { status: 401 });

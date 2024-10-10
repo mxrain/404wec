@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { useData } from '../context/DataContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '@/app/store/store';
+import { setCategoriesLoading, setCategoriesSuccess, setCategoriesError } from '@/app/store/categoriesSlice';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useData } from '@/app/context/DataContext';
 
 interface CategoryData {
   icon: string;
@@ -41,23 +44,50 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ categories, depth = 0 }) =>
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { categories, status, error } = useData();
+  const { categories: contextCategories, status: contextStatus, error: contextError } = useData();
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: categories, status, error } = useSelector((state: RootState) => state.categories);
   const [logoText, setLogoText] = useState('');
   const fullLogoText = '资源桶';
 
   useEffect(() => {
+    // 使用 useData 的数据更新 Redux store
+    dispatch(setCategoriesLoading());
+    if (contextStatus === 'success') {
+      dispatch(setCategoriesSuccess(contextCategories));
+    } else if (contextStatus === 'error') {
+      dispatch(setCategoriesError(contextError || '未知错误'));
+    }
+  }, [contextCategories, contextStatus, contextError, dispatch]);
+
+  // 这里处理fullLogoText是为了实现一个打字机效果的动画
+  // 当组件加载时，"资源桶"这三个字会逐个显示出来，给用户一种动态的感觉
+  // 这种效果可以吸引用户的注意力，并为网站增添一些视觉趣味性
+  // 具体实现方法是:
+  // 1. 使用useState hook来管理logoText状态
+  // 2. 使用useEffect hook在组件挂载后启动一个定时器
+  // 3. 定时器每200毫秒添加一个字符到logoText中
+  // 4. 当所有字符都添加完毕后，清除定时器
+  // 5. 组件卸载时也会清除定时器，防止内存泄漏
+  useEffect(() => {
     let index = 0;
     const timer = setInterval(() => {
       if (index < fullLogoText.length) {
-        setLogoText((prev) => prev + fullLogoText[index]);
+        setLogoText(fullLogoText.slice(0, index + 1));
         index++;
       } else {
         clearInterval(timer);
       }
     }, 200);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      setLogoText(fullLogoText); // 确保在组件卸载时显示完整文本
+    };
   }, []);
+
+  // 如果logoText为空，显示完整文本
+  const displayLogoText = logoText || fullLogoText;
 
   return (
     <header className={styles.header}>
@@ -71,7 +101,7 @@ const Header: React.FC = () => {
               <Skeleton className="h-10 w-[100px]" />
               <Skeleton className="h-10 w-[100px]" />
             </div>
-          ) : status === 'error' ? (
+          ) : status === 'failed' ? (
             <div className={styles.errorMessage}>错误: {error}</div>
           ) : (
             <>

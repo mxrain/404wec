@@ -146,3 +146,11 @@ export const getFileSha = async (path: string) => {
 function encodeUnicode(str: string) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode(parseInt(p1, 16))));
 }
+
+export async function fetchCategories() {
+  const res = await fetch('/api/categories');
+  if (!res.ok) {
+    throw new Error('Failed to fetch categories');
+  }
+  return res.json();
+}
