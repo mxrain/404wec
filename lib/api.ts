@@ -154,3 +154,17 @@ export async function fetchCategories() {
   }
   return res.json();
 }
+
+export async function fetchResources() {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const response = await axios.get(`${apiUrl}/api/resources`);
+    if (response.status !== 200) {
+      throw new Error('获取资源失败');
+    }
+    return response.data;
+  } catch (error) {
+    console.error('获取资源时出错:', error);
+    throw error;
+  }
+};

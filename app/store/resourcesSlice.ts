@@ -1,26 +1,30 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchData } from '@/lib/api';
-import { ResourcesState } from '../sys/add/types';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { Resource } from '@/app/sys/add/types';
+import { fetchResources } from '@/lib/api';
 
-export const fetchResourcesAsync = createAsyncThunk(
-  'resources/fetchResources',
-  async () => {
-    const data = await fetchData();
-    return data.resources;
-  }
-);
-
-interface ResourcesSliceState {
-  resources: ResourcesState;
+export interface ResourcesState {
+  data: Record<string, Resource>;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
-const initialState: ResourcesSliceState = {
-  resources: {},
+const initialState: ResourcesState = {
+  data: {},
   status: 'idle',
-  error: null,
+  error: null
 };
+
+export const fetchResourcesAsync = createAsyncThunk(
+  'resources/fetchResources',
+  async (_, { rejectWithValue }) => {
+    try {
+      const resources = await fetchResources();
+      return resources;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 
 const resourcesSlice = createSlice({
   name: 'resources',
@@ -33,11 +37,12 @@ const resourcesSlice = createSlice({
       })
       .addCase(fetchResourcesAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.resources = action.payload;
+        state.data = action.payload;
+        state.error = null;
       })
       .addCase(fetchResourcesAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message || null;
+        state.error = action.payload as string;
       });
   },
 });
