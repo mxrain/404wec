@@ -2,8 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Resource } from '@/app/sys/add/types';
 import { fetchResources } from '@/lib/api';
 
-
-
 export interface ResourcesState {
   data: Record<string, Resource>;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -39,9 +37,7 @@ const resourcesSlice = createSlice({
       })
       .addCase(fetchResourcesAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = Object.fromEntries(
-          action.payload.map((resource: Resource) => [resource.id, resource])
-        );
+        state.data = Object.fromEntries(action.payload.map(resource => [resource.id, resource]));
         state.error = null;
       })
       .addCase(fetchResourcesAsync.rejected, (state, action) => {

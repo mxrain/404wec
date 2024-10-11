@@ -1,5 +1,4 @@
 export interface Resource {
-    id: string;
     name: string;
     category: string;
     images: string[];
@@ -37,3 +36,4 @@ export interface ChangeRecord {
   data?: any;
   listChanges?: string[];
 }
+
