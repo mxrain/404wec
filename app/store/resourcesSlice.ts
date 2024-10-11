@@ -37,7 +37,10 @@ const resourcesSlice = createSlice({
       })
       .addCase(fetchResourcesAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = Object.fromEntries(action.payload.map(resource => [resource.id, resource]));
+        state.data = Object.fromEntries(action.payload.map((resource: { [key: string]: any }) => {
+          const key = resource.id;
+          return [key, resource];
+        }));
         state.error = null;
       })
       .addCase(fetchResourcesAsync.rejected, (state, action) => {
