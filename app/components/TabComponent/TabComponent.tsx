@@ -12,7 +12,7 @@ interface Tab {
 
 
 export default function TabComponent() {
-  const [isExceed, setIsExceed] = useState(() => window.innerWidth < 768);
+  const [isExceed, setIsExceed] = useState(false); // 修改初始状态为 false
   const [showMoreModal, setShowMoreModal] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLDivElement>(null);
@@ -29,6 +29,7 @@ export default function TabComponent() {
   };
 
   useEffect(() => {
+    setIsExceed(window.innerWidth < 768); // 在 useEffect 中设置 isExceed
     if (status === 'succeeded' && categories) {
       const extractCategories = (obj: any): Tab[] => {
         let extractedCategories: Tab[] = [];
