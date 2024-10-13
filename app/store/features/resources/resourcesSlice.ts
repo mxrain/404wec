@@ -61,10 +61,8 @@ const resourcesSlice = createSlice({
       })
       .addCase(fetchResourcesAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = Object.fromEntries(action.payload.map((resource: { [key: string]: any }) => {
-          const key = resource.id;
-          return [key, resource];
-        }));
+        // 直接使用返回的数据，因为它已经是正确的格式
+        state.data = action.payload;
         state.error = null;
       })
       .addCase(fetchResourcesAsync.rejected, (state, action) => {

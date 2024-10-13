@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { addTab, removeTab, clearCache } from '../../store/resourcesSlice';
+import { addTab, removeTab, clearCache } from '../../store/features/resources/resourcesSlice';
 
 interface Tab {
   path: string;

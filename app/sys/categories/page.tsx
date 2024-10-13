@@ -205,7 +205,6 @@ const CRUDTable: React.FC = () => {
     try {
       const categoriesData = await fetchCategories();
       setData(categoriesData);
-      console.log(categoriesData);
     } catch (error) {
       console.error('获取数据失败:', error);
       toast({
@@ -321,7 +320,6 @@ const CRUDTable: React.FC = () => {
         }
       )
 
-      console.log('File updated successfully:', response.data)
       toast({
         title: "成功",
         description: "数据已成功保存到 GitHub 的 master 分支",

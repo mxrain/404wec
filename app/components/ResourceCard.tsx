@@ -5,21 +5,13 @@ import { Resource } from '@/app/sys/add/types';
 
 // 更新 ResourceCardProps 接口
 interface ResourceCardProps {
-  resource: Resource & { uuid: string };  // 确保 resource 包含 uuid
+  resource: Resource;
+  uuid: string;  // 单独接收 uuid
 }
 
+const ResourceCard: React.FC<ResourceCardProps> = ({ resource, uuid }) => {
+  const { name, images, tags, introduction, update_time } = resource;
 
-
-
-const ResourceCard: React.FC<ResourceCardProps> = ({ resource }) => {
-  const { name, images, tags, introduction, update_time, uuid } = resource;
-
-  useEffect(() => {
-    console.log(name, images, tags, introduction, update_time, uuid);
-    
-  }, []);
-
-    
   return (
     <Link href={`/resource/${uuid}`} className="block">
       <div className="border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -48,6 +40,7 @@ const ResourceCard: React.FC<ResourceCardProps> = ({ resource }) => {
         </div>
       </div>
     </Link>
+
   );
 };
 

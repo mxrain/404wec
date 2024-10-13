@@ -9,6 +9,7 @@ export async function GET() {
       throw new Error('获取数据失败');
     }
     const data = await response.json();
+    
     return NextResponse.json(data);
   } catch (error) {
     console.error('获取类别数据时出错:', error);

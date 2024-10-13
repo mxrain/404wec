@@ -1,20 +1,16 @@
 'use client'
 
-import React, { useEffect } from 'react';
-// import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-// import { fetchResourcesAsync } from '@/app/store/resourcesSlice';
-// import { Skeleton } from "@/components/ui/skeleton";
-// import Image from 'next/image';
-// import Link from 'next/link';
-// import { Resource } from '@/app/sys/add/types';
+import React from 'react';
+
+import ResourceDetail from '@/app/components/ResourceDetail/ResourceDetail';
 
 export default function ResourceDetailPage({ params }: { params: { uuid: string } }) {
-  
-
+ 
 
   return (
-    <div>
-        {params.uuid}
+    <div className="container mx-auto p-4 mt-48">
+      <ResourceDetail uuid={params.uuid} />
     </div>
-  )
+  );
 }
+

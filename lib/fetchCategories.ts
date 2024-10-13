@@ -4,7 +4,6 @@ export async function fetchCategories() {
   const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER;
   const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 
-  console.log('环境变量:', { owner, repo });
 
   if (!owner || !repo) {
     console.error('GitHub 所有者或仓库名未设置');
@@ -14,7 +13,6 @@ export async function fetchCategories() {
   const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
   const rawUrl = `https://raw.gitmirror.com/${owner}/${repo}/master`;
 
-  console.log('Base URL:', baseUrl);
   
   try {
     const response = await axios.get(`${rawUrl}/src/db/db.json`);

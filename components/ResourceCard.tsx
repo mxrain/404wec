@@ -1,33 +1,44 @@
 import React from 'react';
-import Image from 'next/image';  // 添加这行导入
+import Image from 'next/image';
+import Link from 'next/link';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Resource } from '@/app/sys/add/types';
 
+
 interface ResourceCardProps {
-  resource: Pick<Resource, 'name' | 'images' | 'tags' | 'introduction' | 'source_links' | 'uploaded' | 'update_time'>;
+  resource: Pick<Resource, 'name' | 'images' | 'tags' | 'introduction' | 'source_links' | 'uploaded' | 'update_time' >;
+  uuid: string;
 }
 
-const ResourceCard: React.FC<ResourceCardProps> = ({ resource }) => {
+const ResourceCard: React.FC<ResourceCardProps> = ({ resource, uuid }) => {
   return (
-    <div className="border rounded-lg overflow-hidden shadow-lg">
-      <Image 
-        src={resource.images[0]} 
-        alt={resource.name} 
-        width={200} 
-        height={200} 
-        className="w-full h-48 object-cover"
-      />
-      <div className="p-4">
-        <h3 className="font-bold text-xl mb-2">{resource.name}</h3>
-        <p className="text-gray-700 text-base mb-2">{resource.introduction?.slice(0, 100)}...</p>
-        <div className="flex flex-wrap">
-          {resource.tags.map((tag: string) => (
-            <span key={tag} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
+    <Link href={`/resource/${uuid}`}>
+      <Card className="h-full transition-shadow hover:shadow-lg">
+        <CardHeader className="p-0">
+          <Image 
+            src={resource.images[0]} 
+            alt={resource.name} 
+            width={400} 
+            height={200} 
+            className="w-full h-48 object-cover rounded-t-lg"
+          />
+        </CardHeader>
+        <CardContent className="p-4">
+          <CardTitle className="text-xl mb-2">{resource.name}</CardTitle>
+          <p className="text-muted-foreground text-sm mb-2">{resource.introduction?.slice(0, 100)}...</p>
+        </CardContent>
+        <CardFooter className="p-4 pt-0">
+          <div className="flex flex-wrap gap-2">
+            {resource.tags.slice(0, 3).map((tag: string) => (
+              <Badge key={tag} variant="secondary">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 };
 

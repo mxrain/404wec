@@ -3,6 +3,15 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['picsum.photos'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
+      },
+      // 可以添加更多的模式
+    ],
   },
   // 如果需要，可以在这里添加其他配置
   eslint: {

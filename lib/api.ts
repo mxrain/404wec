@@ -7,7 +7,7 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
 const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master`;
 
 
@@ -159,15 +159,30 @@ export async function fetchCategories() {
 }
 
 export async function fetchResources() {
+  const res = await fetch('/api/resources');
+  if (!res.ok) {
+    throw new Error('Failed to fetch resources');
+  }
+  return res.json();
+};
+
+// uuid.json
+
+export async function fetchResourceInfo(uuid: string) {
   try {
-    
-    const response = await axios.get(`${apiUrl}/api/resources`);
-    if (response.status !== 200) {
-      throw new Error('获取资源失败');
+    const res = await fetch(`/api/resources-info`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ uuid }),
+    });
+    if (!res.ok) {
+      throw new Error('获取资源信息失败');
     }
-    return response.data;
+    return res.json();
   } catch (error) {
-    console.error('获取资源时出错:', error);
-    throw error;
+    console.error('获取资源信息时出错:', error);
+    throw new Error('获取资源信息失败');
   }
 };

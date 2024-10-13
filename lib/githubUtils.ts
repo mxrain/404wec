@@ -110,22 +110,18 @@ async function example() {
 
   // 获取文件内容
   const fileContent = await github.getFileContent(owner, repo, 'README.md');
-  console.log('File content:', fileContent);
 
   // 创建新文件
   const createSuccess = await github.createFile(owner, repo, 'test.txt', 'Hello, GitHub!');
-  console.log('File created:', createSuccess);
 
   // 更新文件
   if (fileContent && fileContent.sha) {
     const updateSuccess = await github.updateFile(owner, repo, 'test.txt', 'Updated content', fileContent.sha);
-    console.log('File updated:', updateSuccess);
   }
 
   // 删除文件
   if (fileContent && fileContent.sha) {
     const deleteSuccess = await github.deleteFile(owner, repo, 'test.txt', fileContent.sha);
-    console.log('File deleted:', deleteSuccess);
   }
 }
 

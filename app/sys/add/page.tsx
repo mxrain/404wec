@@ -32,7 +32,6 @@ export default function ResourceCRUD() {
       setListData(listData);
     };
     loadData();
-    console.log(resources);
     
   }, []);
 

@@ -3,7 +3,6 @@ import Link from 'next/link';
 import styles from './Header.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/app/store/store';
-import { fetchCategoriesAsync } from '@/app/store/features/categories/categoriesSlice';
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface CategoryData {
@@ -43,17 +42,10 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ categories, depth = 0 }) =>
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
   const { data: categories, status, error } = useSelector((state: RootState) => state.categories);
   const [logoText, setLogoText] = useState('');
   const fullLogoText = '资源桶';
 
-  useEffect(() => {
-    // 在组件挂载时获取categories
-    if (status === 'idle') {
-      dispatch(fetchCategoriesAsync());
-    }
-  }, [status, dispatch]);
 
   // 这里处理fullLogoText是为了实现一个打字机效果的动画
   // 当组件加载时，"资源桶"这三个字会逐个显示出来，给用户一种动态的感觉
@@ -121,6 +113,7 @@ const Header: React.FC = () => {
         </nav>
       </div>
     </header>
+
   );
 };
 
