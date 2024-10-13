@@ -3,9 +3,8 @@ import Link from 'next/link';
 import styles from './Header.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/app/store/store';
-import { setCategoriesLoading, setCategoriesSuccess, setCategoriesError } from '@/app/store/categoriesSlice';
+import { fetchCategoriesAsync } from '@/app/store/features/categories/categoriesSlice';
 import { Skeleton } from "@/components/ui/skeleton";
-import { useData } from '@/app/context/DataContext';
 
 interface CategoryData {
   icon: string;
@@ -44,21 +43,17 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ categories, depth = 0 }) =>
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { categories: contextCategories, status: contextStatus, error: contextError } = useData();
   const dispatch = useDispatch<AppDispatch>();
   const { data: categories, status, error } = useSelector((state: RootState) => state.categories);
   const [logoText, setLogoText] = useState('');
   const fullLogoText = '资源桶';
 
   useEffect(() => {
-    // 使用 useData 的数据更新 Redux store
-    dispatch(setCategoriesLoading());
-    if (contextStatus === 'success') {
-      dispatch(setCategoriesSuccess(contextCategories));
-    } else if (contextStatus === 'error') {
-      dispatch(setCategoriesError(contextError || '未知错误'));
+    // 在组件挂载时获取categories
+    if (status === 'idle') {
+      dispatch(fetchCategoriesAsync());
     }
-  }, [contextCategories, contextStatus, contextError, dispatch]);
+  }, [status, dispatch]);
 
   // 这里处理fullLogoText是为了实现一个打字机效果的动画
   // 当组件加载时，"资源桶"这三个字会逐个显示出来，给用户一种动态的感觉
@@ -93,7 +88,7 @@ const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={`${styles.logo} ${styles.enhancedLogo}`}>
-          <span className={styles.logoText}>{logoText}</span>
+          <span className={styles.logoText}>{displayLogoText}</span>
         </Link>
         <nav className={styles.nav}>
           {status === 'loading' ? (

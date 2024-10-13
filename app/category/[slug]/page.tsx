@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { fetchCategoriesAsync } from '@/app/store/categoriesSlice';
+import { fetchCategoriesAsync } from '@/app/store/features/categories/categoriesSlice';
 import { fetchResourcesAsync } from '@/app/store/resourcesSlice';
 import ResourceCard from '@/components/ResourceCard';
 import { Skeleton } from "@/components/ui/skeleton";

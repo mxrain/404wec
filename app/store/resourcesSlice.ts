@@ -1,17 +1,26 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Resource } from '@/app/sys/add/types';
 import { fetchResources } from '@/lib/api';
+
+interface Tab {
+  path: string;
+  title: string;
+}
 
 export interface ResourcesState {
   data: Record<string, Resource>;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  tabs: Tab[];
+  cache: Record<string, any>; // 添加这一行
 }
 
 const initialState: ResourcesState = {
   data: {},
   status: 'idle',
-  error: null
+  error: null,
+  tabs: [],
+  cache: {}, // 添加这一行
 };
 
 export const fetchResourcesAsync = createAsyncThunk(
@@ -29,7 +38,22 @@ export const fetchResourcesAsync = createAsyncThunk(
 const resourcesSlice = createSlice({
   name: 'resources',
   initialState,
-  reducers: {},
+  reducers: {
+    addTab: (state, action: PayloadAction<Tab>) => {
+      if (!state.tabs.find(tab => tab.path === action.payload.path)) {
+        state.tabs.push(action.payload);
+      }
+    },
+    removeTab: (state, action: PayloadAction<string>) => {
+      state.tabs = state.tabs.filter(tab => tab.path !== action.payload);
+    },
+    clearCache: (state, action: PayloadAction<string>) => {
+      // 检查 action.payload 是否存在于 cache 中
+      if (action.payload in state.cache) {
+        delete state.cache[action.payload];
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchResourcesAsync.pending, (state) => {
@@ -50,4 +74,5 @@ const resourcesSlice = createSlice({
   },
 });
 
+export const { addTab, removeTab, clearCache } = resourcesSlice.actions;
 export default resourcesSlice.reducer;

@@ -7,15 +7,18 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
 const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
-console.log(baseUrl);
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master`;
+
+
 
 export const fetchData = async () => {
   try {
     const [resourcesRes, categoriesRes, tagsRes, listRes] = await Promise.all([
-      axios.get<ResourcesState>('https://raw.githubusercontent.com/mxrain/404zyt/refs/heads/master/src/db/uuid_resource_curd.json'),
-      axios.get('https://raw.githubusercontent.com/mxrain/404zyt/refs/heads/master/src/db/db.json'),
-      axios.get('https://raw.githubusercontent.com/mxrain/404zyt/refs/heads/master/src/db/tabs.json'),
-      axios.get('https://raw.githubusercontent.com/mxrain/404zyt/refs/heads/master/src/db/list.json')
+      axios.get<ResourcesState>(`${rawUrl}/src/db/uuid_resource_curd.json`),
+      axios.get(`${rawUrl}/src/db/db.json`),
+      axios.get(`${rawUrl}/src/db/tabs.json`),
+      axios.get(`${rawUrl}/src/db/list.json`)
     ]);
     return {
       resources: resourcesRes.data,
@@ -133,7 +136,7 @@ async function deleteFile(path: string, commitMessage: string, results: any[]) {
 
 export const getFileSha = async (path: string) => {
   try {
-    const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    const response = await axios.get(`${baseUrl}/${path}`, {
       headers: { Authorization: `token ${token}` },
     });
     return response.data.sha;
@@ -157,7 +160,7 @@ export async function fetchCategories() {
 
 export async function fetchResources() {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    
     const response = await axios.get(`${apiUrl}/api/resources`);
     if (response.status !== 200) {
       throw new Error('获取资源失败');
