@@ -22,6 +22,9 @@ export default function Home() {
     <div className={styles.grid}>
       <RecommendCard title="推荐资源" type="recommend" />
       <CarouselCard title="轮播图"/>
+      <RecommendCard title="最新" type="latest" />
+      <RecommendCard title="最火" type="hot" />
+      <RecommendCard title="最顶" type="top" />
     </div>
   );
 }

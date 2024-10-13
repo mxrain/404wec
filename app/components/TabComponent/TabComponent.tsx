@@ -14,6 +14,7 @@ interface Tab {
 export default function TabComponent() {
   const [isExceed, setIsExceed] = useState(false); // 修改初始状态为 false
   const [showMoreModal, setShowMoreModal] = useState(false);
+  const [showMoreButton, setShowMoreButton] = useState(false); // 添加状态来控制“更多”按钮的显示
   const headerRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLDivElement>(null);
   const moreModalRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,7 @@ export default function TabComponent() {
 
   useEffect(() => {
     setIsExceed(window.innerWidth < 768); // 在 useEffect 中设置 isExceed
+    setShowMoreButton(window.innerWidth >= 768); // 根据屏幕宽度设置 showMoreButton
     if (status === 'succeeded' && categories) {
       const extractCategories = (obj: any): Tab[] => {
         let extractedCategories: Tab[] = [];
@@ -100,16 +102,18 @@ export default function TabComponent() {
     <div className={styles.tabContainer} ref={headerRef}>
       {!isExceed && (
         <div className={styles.tabList}>
-          {tabs.slice(0, 23).map((tab, index) => (
+          {tabs.slice(0, showMoreButton ? 23 : tabs.length).map((tab, index) => ( // 根据 showMoreButton 控制显示数量
             <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index}>{tab.name}</Link>
           ))}
-          <div className={styles.tabItem} onClick={toggleMoreModal} ref={moreButtonRef}>
-            更多
-          </div>
+          {showMoreButton && ( // 仅在大屏幕上显示“更多”按钮
+            <div className={styles.tabItem} onClick={toggleMoreModal} ref={moreButtonRef}>
+              更多
+            </div>
+          )}
           {showMoreModal && (
             <div className={styles.moreModal} ref={moreModalRef} style={{
               top: moreButtonRef.current ? `${moreButtonRef.current.offsetHeight + 135}px` : '100%',
-              left: moreButtonRef.current ? `${moreButtonRef.current.offsetLeft - 80}px` : '0'
+              left: moreButtonRef.current ? `${moreButtonRef.current.offsetLeft}px` : '0'
             }}>
               {tabs.slice(19).map((tab, index) => (
                 <Link href={`/category/${tab.link}`} className={styles.tabItem} key={index + 23}>{tab.name}</Link>
