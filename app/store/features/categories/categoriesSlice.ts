@@ -53,6 +53,7 @@ const categoriesSlice = createSlice({
     // 设置加载失败状态，并记录错误信息
     setCategoriesError: (state, action: PayloadAction<string>) => {
       state.status = 'failed';
+      
       state.error = action.payload;
     },
   },

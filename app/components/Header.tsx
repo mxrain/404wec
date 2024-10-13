@@ -29,7 +29,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ categories, depth = 0 }) =>
           onMouseEnter={() => setHoveredCategory(key)}
           onMouseLeave={() => setHoveredCategory(null)}
         >
-          <Link href={`/category/${value.link}`} className={styles.categoryLink}>
+          <Link href={`/category/${value.link.replace(/\//g, '')}`} className={styles.categoryLink}>
             <span style={{ fontWeight: value.items ? 'bold' : 'normal' }}>{key}</span>
           </Link>
           {value.items && hoveredCategory === key && (
