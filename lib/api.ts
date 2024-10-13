@@ -186,3 +186,18 @@ export async function fetchResourceInfo(uuid: string) {
     throw new Error('获取资源信息失败');
   }
 };
+
+// list.json
+
+export const fetchList = async () => {
+  try {
+    const response = await fetch('/api/list');
+    if (!response.ok) {
+      throw new Error('Failed to fetch list data');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching list data:', error);
+    throw error;
+  }
+};
