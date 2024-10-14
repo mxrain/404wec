@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, LayoutDashboard, FileText, List, Sidebar as SidebarIcon } from 'lucide-react'
+import { Plus, LayoutDashboard, FileText, List, Sidebar as SidebarIcon, Home } from 'lucide-react'
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -52,13 +52,13 @@ const Sidebar = () => {
           </button>
         )}
       </div>
-      
+
       <nav className="flex-grow mt-5 overflow-hidden px-2">
         {menuItems.map((item, index) => (
           <div key={index} className="mb-1">
             {item.subItems ? (
               <div>
-                <button 
+                <button
                   onClick={toggleList}
                   className="flex items-center w-full px-4 py-2 hover:bg-gray-200 transition-colors overflow-hidden rounded-lg"
                 >
@@ -70,7 +70,7 @@ const Sidebar = () => {
                 {isListExpanded && isExpanded && (
                   <div className="ml-4 mt-1">
                     {item.subItems.map((subItem, subIndex) => (
-                      <Link 
+                      <Link
                         key={subIndex}
                         href={subItem.href}
                         className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors overflow-hidden rounded-lg"
@@ -82,7 +82,7 @@ const Sidebar = () => {
                 )}
               </div>
             ) : (
-              <button 
+              <button
                 onClick={() => handleNavigation(item.href)}
                 className={`flex items-center w-full px-4 py-2 hover:bg-gray-200 transition-colors overflow-hidden rounded-lg ${item.className || ''}`}
               >
@@ -95,20 +95,38 @@ const Sidebar = () => {
           </div>
         ))}
       </nav>
-      
-      <div 
+
+      <div
         className="absolute top-0 right-0 w-[1px] h-full bg-gray-300 hover:w-1 hover:bg-gray-400 transition-all duration-200 cursor-ew-resize"
         onClick={toggleSidebar}
       ></div>
 
-      {!isExpanded && (
+      <div className="mb-1 px-2" >
+        {!isExpanded && (
+          <button
+            onClick={toggleSidebar}
+            className="flex items-center w-full px-4 py-2 hover:bg-gray-200 transition-colors overflow-hidden rounded-lg"
+          >
+            <SidebarIcon className="inline-block flex-shrink-0" size={20} />
+          </button>
+        )}
         <button
-          onClick={toggleSidebar}
-          className="absolute bottom-4 left-0 right-0 mx-auto flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition-all duration-300 ease-in-out"
+          onClick={() => router.push('/')}
+          className="flex items-center w-full px-4 py-2 hover:bg-gray-200 transition-colors overflow-hidden rounded-lg"
         >
-          <SidebarIcon size={16} />
+          {isExpanded ? (
+            <>
+              <Home className="inline-block flex-shrink-0" size={20} />
+              <span className="ml-2 whitespace-nowrap transition-all duration-300">返回主页</span>
+            </>
+          ) : (
+            <Home className="inline-block flex-shrink-0" size={20} />
+          )}
         </button>
-      )}
+      </div>
+
+
+
     </aside>
   )
 }
