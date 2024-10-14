@@ -54,7 +54,13 @@ export const fetchList = createAsyncThunk('list/fetchList', async () => {
 const listSlice = createSlice({
   name: 'list',
   initialState,
-  reducers: {},
+  reducers: {
+    clearListCache: (state) => {
+      state.data = null;
+      state.status = 'idle';
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchList.pending, (state) => {
@@ -71,5 +77,5 @@ const listSlice = createSlice({
   },
 });
 
+export const { clearListCache } = listSlice.actions;
 export default listSlice.reducer;
-

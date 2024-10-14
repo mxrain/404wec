@@ -1,5 +1,4 @@
 "use client"
-import { redirect } from 'next/navigation'
 
 import Sidebar from './components/Sidebar'
 import Footer from './components/Footer'

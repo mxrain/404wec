@@ -189,15 +189,13 @@ export async function fetchResourceInfo(uuid: string) {
 
 // list.json
 
-export const fetchList = async () => {
-  try {
-    const response = await fetch('/api/list');
-    if (!response.ok) {
-      throw new Error('Failed to fetch list data');
-    }
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching list data:', error);
-    throw error;
+export async function fetchList() {
+  const response = await fetch('/api/list', {
+    cache: 'no-store',
+    next: { revalidate: 0 }
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch list');
   }
-};
+  return response.json();
+}

@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
-  
+import axios from 'axios';
+
 const DATA_URL = `https://raw.gitmirror.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${process.env.NEXT_PUBLIC_GITHUB_REPO}/master/src/db/uuid_resource_curd.json`;
 
 export async function GET() {
   try {
-    const response = await fetch(DATA_URL);
-    if (!response.ok) {
-      throw new Error('获取数据失败');
-    }
-    const data = await response.json();
+    const response = await axios.get(DATA_URL);
+    const data = response.data;
     
     return NextResponse.json(data);
   } catch (error) {

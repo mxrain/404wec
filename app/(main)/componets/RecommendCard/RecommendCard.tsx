@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './RecommendCard.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/app/store/store';
-import { fetchList } from '@/app/store/features/list/listSlice';
+import { fetchList, clearListCache } from '@/app/store/features/list/listSlice';
 
 interface SourceLink {
   link: string;
@@ -38,6 +39,7 @@ interface RecommendCardProps {
 
 const RecommendCard: React.FC<RecommendCardProps> = ({ title, type }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const { data, status } = useSelector((state: RootState) => state.list);
 
   const [visibleItems, setVisibleItems] = useState<ListItem[]>([]);
@@ -73,10 +75,12 @@ const RecommendCard: React.FC<RecommendCardProps> = ({ title, type }) => {
     }
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     setCurrentPage(0);
-    dispatch(fetchList());
-  };
+    dispatch(clearListCache()); // 清除 Redux 缓存
+    dispatch(fetchList()); // 重新获取数据
+    router.refresh(); // 刷新当前页面，清除 Next.js 客户端缓存
+  }, [dispatch, router]);
 
   const renderSkeletonItems = () => {
     return Array.from({ length: itemsPerPage }, (_, index) => (
