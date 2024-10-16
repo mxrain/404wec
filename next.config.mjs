@@ -15,19 +15,7 @@ const nextConfig = {
         hostname: '*',
         port: '',
         pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'example.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'anotherexample.com',
-        port: '',
-        pathname: '/**',
-      },
+      }
       // 可以添加更多的模式
     ],
   },
