@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BASE_URL = `https://raw.gitmirror.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${process.env.NEXT_PUBLIC_GITHUB_REPO}/refs/heads/master/src/db/zyt`;
 
-// GET请求处理函数
+// GET请求也做一个
 export async function GET(request: NextRequest) {
-    const uuid = request.nextUrl.searchParams.get('uuid');
+    const url = request.nextUrl;
+    const uuid = url.searchParams.get('uuid');
     try {
         if (!uuid) {
             return NextResponse.json({ error: '缺少 UUID 参数' }, { status: 400 });
@@ -24,10 +25,13 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST请求处理函数
+
+
+
 export async function POST(request: NextRequest) {
     const { uuid } = await request.json();
     try {
+
         if (!uuid) {
             return NextResponse.json({ error: '缺少 UUID 参数' }, { status: 400 });
         }

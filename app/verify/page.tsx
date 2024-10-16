@@ -1,62 +1,72 @@
-'use client';
+'use client'; // 声明这是一个客户端组件
 
+// 导入必要的React hooks和Next.js的路由功能
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './VerifyPage.module.css';
+import styles from './VerifyPage.module.css'; // 导入CSS模块
 
+// 自定义hook：用于管理token的存储、获取和删除
 function useToken() {
+  // 从localStorage获取token
   const getToken = () => {
     return localStorage.getItem('token');
   };
+  // 将token存储到localStorage
   const setToken = (token: string) => {
     localStorage.setItem('token', token);
   };
+  // 从localStorage删除token
   const removeToken = () => {
     localStorage.removeItem('token');
   };
 
+  // 返回一个包含这三个方法的对象
   return { getToken, setToken, removeToken };
 }
 
-export default function VerifyPage() { // 验证页面
-    const [status, setStatus] = useState<'idle' | 'verifying' | 'success' | 'failure'>('idle'); // 状态
-    const [password, setPassword] = useState(''); // 密码
-    const router = useRouter();
-    const { getToken, setToken, removeToken } = useToken();
+// 验证页面的主组件
+export default function VerifyPage() {
+    // 使用useState hook管理组件状态
+    const [status, setStatus] = useState<'idle' | 'verifying' | 'success' | 'failure'>('idle'); // 验证状态
+    const [password, setPassword] = useState(''); // 用户输入的密码
+    const router = useRouter(); // 用于页面导航
+    const { getToken, setToken, removeToken } = useToken(); // 使用自定义hook管理token
     
-    
-    const handleVerify = async () => { // 验证
+    // 处理验证逻辑的异步函数
+    const handleVerify = async () => {
         setStatus('verifying'); // 设置状态为验证中
         try {
-            const response = await fetch('/api/verify', { // 发送请求
-                method: 'POST', // 方法
-                headers: { // 头部
+            // 发送POST请求到验证API
+            const response = await fetch('/api/verify', {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ password }),
             });
-            const data = await response.json(); // 获取数据
-            if (data.success) { // 成功
-                setStatus('success'); // 设置状态为成功
-                setToken(data.token);  // 使用 cookie 存储 token
-                router.push('/sys'); // 修改这里：将 '/' 改为 '/sys'
+            const data = await response.json(); // 解析响应数据
+            if (data.success) {
+                setStatus('success'); // 验证成功
+                setToken(data.token);  // 存储token
+                router.push('/sys'); // 跳转到系统页面
             } else {
-                setStatus('failure'); // 设置状态为失败
+                setStatus('failure'); // 验证失败
             }
         } catch (error) {
-            setStatus('failure'); // 设置状态为失败
+            setStatus('failure'); // 发生错误，验证失败
         }
     };
 
+    // 使用useEffect hook在组件挂载时检查token
     useEffect(() => {  
-        // 获取cookie
-        const token = getToken();
+        const token = getToken(); // 获取存储的token
         
         if (token === undefined) {
-            setStatus('idle');
+            setStatus('idle'); // 没有token，设置为初始状态
         } else if (token) {
-            setStatus('verifying'); // 设置状态为验证中
-            fetch('/api/verify', { // 发送验证请求
+            setStatus('verifying'); // 有token，开始验证
+            // 发送验证请求
+            fetch('/api/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,22 +77,23 @@ export default function VerifyPage() { // 验证页面
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    setToken(data.token);  // 更新 cookie 中的 token
-                    router.push('/sys');
+                    setToken(data.token);  // 更新token
+                    router.push('/sys'); // 验证成功，跳转到系统页面
                 } else {
-                    removeToken();  // 清除 cookie 中的 token
+                    removeToken();  // 验证失败，删除token
                     setStatus('failure');
                 }
             })
             .catch(error => {
-                removeToken();  // 清除 cookie 中的 token
+                removeToken();  // 发生错误，删除token
                 setStatus('failure');
             });
         } else {
-            setStatus('idle');
+            setStatus('idle'); // token为空，设置为初始状态
         }
-    }, [router, getToken, setToken, removeToken]); // 添加 router 作为依赖项
+    }, [router, getToken, setToken, removeToken]); // 依赖项列表
 
+    // 渲染组件UI
     return (
         <div className={styles.container}>
             <div className={styles.card}>
