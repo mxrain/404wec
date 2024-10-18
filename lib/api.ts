@@ -7,7 +7,6 @@ const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
 const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/master`;
 
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { config } from '@/appConfig';
 
-const BASE_URL = `https://raw.gitmirror.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${process.env.NEXT_PUBLIC_GITHUB_REPO}/refs/heads/master/src/db/zyt`;
 
 // GET请求处理函数
 export async function GET(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: '缺少 UUID 参数' }, { status: 400 });
         }
 
-        const DATA_URL = `${BASE_URL}/${uuid}.json`;
+        const DATA_URL = `${config.apiBaseUrl}/${uuid}.json`;
 
         const response = await fetch(DATA_URL);
         if (!response.ok) {
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(data);
     } catch (error) {
         console.error('获取资源数据时出错:', error);
-        return NextResponse.json({ error: '获取资源数据失败', path: `${BASE_URL}/${uuid}.json` }, { status: 500 });
+        return NextResponse.json({ error: '获取资源数据失败', path: `${config.apiBaseUrl}/${uuid}.json` }, { status: 500 });
     }
 }
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: '缺少 UUID 参数' }, { status: 400 });
         }
 
-        const DATA_URL = `${BASE_URL}/${uuid}.json`;
+        const DATA_URL = `${config.apiBaseUrl}/${uuid}.json`;
 
         const response = await fetch(DATA_URL);
         if (!response.ok) {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(data);
     } catch (error) {
         console.error('获取资源数据时出错:', error);
-        return NextResponse.json({ error: '获取资源数据失败', path: `${BASE_URL}/${uuid}.json` }, { status: 500 });
+        return NextResponse.json({ error: '获取资源数据失败', path: `${config.apiBaseUrl}/${uuid}.json` }, { status: 500 });
     }
 }
 

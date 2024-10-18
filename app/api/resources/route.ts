@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-
-const DATA_URL = `https://raw.gitmirror.com/${process.env.NEXT_PUBLIC_GITHUB_OWNER}/${process.env.NEXT_PUBLIC_GITHUB_REPO}/master/src/db/uuid_resource_curd.json`;
+import { config } from '@/appConfig';
+const DATA_URL = `${config.apiBaseUrl}/uuid_resource_curd.json`;
 
 export async function GET() {
   try {
@@ -10,7 +10,7 @@ export async function GET() {
     
     return NextResponse.json(data);
   } catch (error) {
-    console.error('获取类别数据时出错:', error);
-    return NextResponse.json({ error: '获取类别数据失败' }, { status: 500 });
+    console.error('获取资源数据时出错:', error);
+    return NextResponse.json({ error: '获取资源数据失败', path: DATA_URL }, { status: 500 });
   }
 }
